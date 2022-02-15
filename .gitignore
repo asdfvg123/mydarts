@@ -99,8 +99,8 @@ ENV/
 
 # mypy
 .mypy_cache/
-search-*/
-eval-*/
+#search-*/
+#eval-*/
 runs/
 
 # Swap

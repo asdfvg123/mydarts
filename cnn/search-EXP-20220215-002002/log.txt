@@ -1,0 +1,8 @@
+2022-02-15 00:20:02,930 gpu device = 0
+2022-02-15 00:20:02,930 args = Namespace(data='../data', batch_size=64, learning_rate=0.025, learning_rate_min=0.001, momentum=0.9, weight_decay=0.0003, report_freq=50, gpu=0, epochs=50, init_channels=16, layers=8, model_path='saved_models', cutout=False, cutout_length=16, drop_path_prob=0.3, save='search-EXP-20220215-002002', seed=2, grad_clip=5, train_portion=0.5, unrolled=True, arch_learning_rate=0.0003, arch_weight_decay=0.001)
+2022-02-15 00:20:04,449 param size = 0.887034MB
+2022-02-15 00:20:05,010 epoch 0 lr 2.495266e-02
+2022-02-15 00:20:05,011 genotype = Genotype(normal=[('max_pool_3x3', 0), ('max_pool_3x3', 1), ('max_pool_3x3', 1), ('dil_conv_3x3', 0), ('dil_conv_3x3', 0), ('max_pool_3x3', 3), ('sep_conv_3x3', 3), ('max_pool_3x3', 0)], normal_concat=range(2, 6), reduce=[('sep_conv_3x3', 0), ('dil_conv_3x3', 1), ('dil_conv_3x3', 2), ('dil_conv_3x3', 1), ('sep_conv_3x3', 2), ('max_pool_3x3', 3), ('max_pool_3x3', 4), ('sep_conv_3x3', 3)], reduce_concat=range(2, 6))
+2022-02-15 00:20:07,862 train 000 2.279124e+00 7.812500 53.125000
+2022-02-15 00:21:48,162 train 050 2.067624e+00 22.579659 73.866425
+2022-02-15 00:23:28,665 train 100 1.913500e+00 28.295174 80.275368
