@@ -1,7 +1,7 @@
 import sys
 import genotypes
 from graphviz import Digraph
-
+import os
 
 def plot(genotype, filename):
   g = Digraph(
@@ -50,6 +50,8 @@ if __name__ == '__main__':
     print("{} is not specified in genotypes.py".format(genotype_name)) 
     sys.exit(1)
 
-  plot(genotype.normal, "normal")
-  plot(genotype.reduce, "reduction")
+  PATH = os.path.dirname(os.path.abspath(__file__)) + "/cells/"
+
+  plot(genotype.normal, PATH + genotype_name + "_normal")
+  plot(genotype.reduce, PATH + genotype_name + "_reduction")
 
