@@ -2,6 +2,18 @@ from collections import namedtuple
 
 Genotype = namedtuple('Genotype', 'normal normal_concat reduce reduce_concat')
 
+LATENCYTABLE = {
+    'none' : 1,
+    'max_pool_3x3' : 100,
+    'avg_pool_3x3' : 50,
+    'skip_connect' : 5,
+    'sep_conv_3x3' : 1000,
+    'sep_conv_5x5' : 5000,
+    'dil_conv_3x3' : 100,
+    'dil_conv_5x5' : 500
+}
+
+
 PRIMITIVES = [
     'none',
     'max_pool_3x3',

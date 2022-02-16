@@ -4,8 +4,8 @@ import torch.nn.functional as F
 from operations import *
 from torch.autograd import Variable
 from genotypes import PRIMITIVES
+from genotypes import LATENCYTABLE
 from genotypes import Genotype
-
 
 class MixedOp(nn.Module):
 
@@ -22,6 +22,26 @@ class MixedOp(nn.Module):
     return sum(w * op(x) for w, op in zip(weights, self._ops))
 
 
+class MixedLatency(nn.Module):
+  #TODO
+  def __init__(self):
+    super(MixedLatency, self).__init__()
+    self._lats = nn.ModuleList()
+    for primitive in PRIMITIVES:
+      # op = OPS[primitive](C, stride, False)
+      # if 'pool' in primitive:
+      #   op = nn.Sequential(op, nn.BatchNorm2d(C, affine=False))
+      # self._ops.append(op)
+      lat = LATENCYTABLE[primitive]
+      self._lats.append(lat)
+
+
+  def forward(self, weights):
+    return sum(w * lat for w, lat in zip(weights, self._lats))
+    # return sum(w * op(x) for w, op in zip(weights, self._ops))
+
+
+
 class Cell(nn.Module):
 
   def __init__(self, steps, multiplier, C_prev_prev, C_prev, C, reduction, reduction_prev):
@@ -33,16 +53,19 @@ class Cell(nn.Module):
     else:
       self.preprocess0 = ReLUConvBN(C_prev_prev, C, 1, 1, 0, affine=False)
     self.preprocess1 = ReLUConvBN(C_prev, C, 1, 1, 0, affine=False)
-    self._steps = steps
+    self._steps = steps #intermediate nodes
     self._multiplier = multiplier
 
     self._ops = nn.ModuleList()
     self._bns = nn.ModuleList()
+    self._lats = nn.ModuleList()
     for i in range(self._steps):
       for j in range(2+i):
         stride = 2 if reduction and j < 2 else 1
         op = MixedOp(C, stride)
+        lat = MixedLatency()
         self._ops.append(op)
+        self._lats.append(lat)
 
   def forward(self, s0, s1, weights):
     s0 = self.preprocess0(s0)
@@ -50,11 +73,16 @@ class Cell(nn.Module):
 
     states = [s0, s1]
     offset = 0
+    celllat = []
     for i in range(self._steps):
       s = sum(self._ops[offset+j](h, weights[offset+j]) for j, h in enumerate(states))
+      lat = max(self._lats[offset+j](weights[offset+j]) for j, _ in enumerate(states))
       offset += len(states)
       states.append(s)
+      celllat.append(lat)
 
+    maxlat = max(celllat)
+    print(maxlat)
     return torch.cat(states[-self._multiplier:], dim=1)
 
 
