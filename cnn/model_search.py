@@ -26,14 +26,16 @@ class MixedLatency(nn.Module):
   #TODO
   def __init__(self):
     super(MixedLatency, self).__init__()
-    self._lats = nn.ModuleList()
+    # self._lats = nn.ModuleList()
+    self._lats = torch.tensor()
     for primitive in PRIMITIVES:
       # op = OPS[primitive](C, stride, False)
       # if 'pool' in primitive:
       #   op = nn.Sequential(op, nn.BatchNorm2d(C, affine=False))
       # self._ops.append(op)
-      lat = LATENCYTABLE[primitive]
-      self._lats.append(lat)
+      lat = torch.tensor([LATENCYTABLE[primitive]])
+
+      torch.cat((self._lats, lat))
 
 
   def forward(self, weights):
