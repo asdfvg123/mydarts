@@ -65,6 +65,12 @@ class Net(nn.Module):
 
 
 net = Net()
+
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+print(device)
+
+net.to(device)
+
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
@@ -73,7 +79,8 @@ for epoch in range(25):  # loop over the dataset multiple times
     running_loss = 0.0
     for i, data in enumerate(trainloader, 0):
         # get the inputs; data is a list of [inputs, labels]
-        inputs, labels = data
+        # inputs, labels = data
+        inputs, labels = data[0].to(device), data[1].to(device)
 
         # zero the parameter gradients
         optimizer.zero_grad()
